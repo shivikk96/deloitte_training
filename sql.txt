@@ -1,0 +1,428 @@
+
+select lower('DASDASD') FROM DUAL;
+
+LOWER('
+-------
+dasdasd
+
+create table student1 ( Roll varchar(10), Name varchar(20), Address varchar(20), Marks number);
+
+insert into student1 values('1','Tufail','Mumbai',96);
+insert into student1 values('2','Amit','Mumbai',96);
+insert into student1 values('3','Tarun','Chennai',98);
+select sum(marks) from student1 group by Address;
+
+SUM(MARKS)
+----------
+       192
+        98
+
+select marks from student;
+
+     MARKS
+----------
+        96  
+        96
+        98
+update student set marks = 200 where name = 'Amit';
+update student set marks = 100 where name = 'Tufai';
+select lpad(marks, 5, '*') from student;
+
+LPAD(
+-----
+**100
+**200
+***98
+
+create table studs2 (sid char(20), sname varchar(20), dob date, doj date, mobile varchar(10));
+
+insert into studs2 values('1','Ram','13-jan-1990','13-jan-2000','12345');
+insert into studs2 values('2','Shyam','13-feb-1990','13-feb-2000','23456');
+insert into studs2 values('3','Balu','13-mar-1990','13-mar-2000','34567');
+
+SQL> select months_between(doj,dob)/12 from studs1;
+
+MONTHS_BETWEEN(DOJ,DOB)/12
+--------------------------
+                        10
+                        10
+                        10
+
+DISPLAY AGE OF USER
+select months_between(sysdate, '04-dec-1996')/12 from dual;
+
+MONTHS_BETWEEN(SYSDATE,'04-DEC-1996')/12
+----------------------------------------
+                              21.6158802
+
+NVL function: whatever fields have null values, it will vopy the value that you give.
+select nvl(marks,'NA') from studs;
+NVL2 function: like tertiary operator in C. (exp1)?(exp2):(exp3);
+select nvl2(exp1,exp2,exp3) from studs;
+COALESCE: returns first non null values.
+
+TABLE CONSTRAINTS
+
+create table studs4
+(
+Roll varchar(10) primary key, 
+Name varchar(20) not null, 
+Address varchar(20) check (Address in ('Chennai','Mumbai','Kolkata')), 
+Marks number check (Marks between 0 and 100)
+)
+
+create table loan_payment
+(
+ loanno number(4) constraint myloancon primary key,
+ loan_status varchar2(10) constraint loanstatus check (loan_status=upper(loan_status)),
+ loan_amt number(10) not null,
+ update_date date default sysdate,
+ product_key varchar2(5)
+)
+
+ASSIGNMENT
+----------
+
+Create a table called Employee with the following Columns  and perform the following operations:-
+------------------------------------------------------------------------------------------------------------
+
+EmployeeID    
+EmployeeName   
+EmployeeAddress : 
+DOB
+DOJ
+Salary
+
+
+a.) Insert five records
+
+b) Retrieve all the records
+
+
+c) Retrieve the Employee name whose salary is greater than 20000
+
+d) Retrieve the Employee name whose address contains 'a' or 'p' or 'r'  as the last character
+ 
+e) Increase the Salary of all the Employee by 20%
+
+f) Delete all the employee records whose salary is less than 5000
+
+create table Employee
+(
+EmployeeID char(5),    
+EmployeeName varchar(20), 
+EmployeeAddress varchar(20),  
+DOB date,
+DOJ date,
+Salary number
+)
+
+a) insert into Employee values('1','Ram','Delhi','13-jan-1990','13-jan-2000','12345');
+insert into Employee values('2','Shyam','Kolkata','13-feb-1990','13-feb-2000','23456');
+insert into Employee values('3','Balu','Cochin','13-mar-1990','13-mar-2000','34567');
+insert into Employee values('4','Chetan','Chennai','13-apr-1990','13-apr-2000','45678');
+insert into Employee values('5','Damu','Mumbai','13-may-1990','13-may-2000','56789');
+
+b) select * from Employee;
+c) select * from Employee where Salary > 20000;
+d) select * from Employee where EmployeeName in ('%a','%p','%r');
+e) update Employee set salary=salary*1.2;
+f) delete from Employee where Salary < 5000;
+
+ALTER COMMANDS
+
+create table AB_emp
+(
+  emp_no numeric(3) primary key,
+  empname varchar2(20) not null,
+  salary numeric(8,2),
+  designation varchar2(20),
+  dept_no numeric(3)
+);
+create table AB_dept
+(
+  dept_no numeric(3) primary key,
+  dept_name varchar2(20),
+location varchar2(20) not null
+);
+
+insert into AB_emp values(1,'Anu',98000,'Consultant',009);
+
+SQL> select * from AB_emp;
+
+    EMP_NO EMPNAME                  SALARY DESIGNATION             DEPT_NO
+---------- -------------------- ---------- -------------------- ----------
+         1 Anu                       98000 Consultant                    9
+
+alter table AB_emp add constraint fk1 foreign key(dept_no) references AB_dept(dept_no)
+                                  *
+ERROR at line 1:
+ORA-02298: cannot validate (SCOTT.FK1) - parent keys not found
+
+
+ADD COMPULsORY DATA TO DEPT TABLE TO GET VALIDITY
+insert into AB_dept values(9,'Anu','Bangalore');
+
+1 row created.
+
+SQL> alter table AB_emp add constraint fk1 foreign key(dept_no) references AB_dept(dept_no);
+
+Table altered.
+
+WHEN LINKING FOREIGN KEYS, NAMES NOT NEEDED TO BE SAME. ONLY DATA TYPE NEEDS TO BE SAME
+
+create table supplier
+(
+ supplier_id numeric(10) not null,
+ supplier_name varchar2(50) not null,
+ contact_name varchar(50),
+ constraint supplier_pk primary key (supplier_id)
+);
+
+create table products
+( 
+ product_id numeric(10) not null,
+ supplier_id numeric(10) not null,
+ constraint fk_supplier foreign key(supplier_id)
+ references supplier(supplier_id)
+);
+
+alter table student_t add email varchar2(20);
+alter table student_t drop column email;
+alter table student_t add constraint emailConstraint check (email in ('A','B','C'));
+alter table student_t drop constraint emailConstraint;
+
+CONSTRAINT CASCADES.
+
+create table section_t
+(
+section_id  number(3) constraint s_id check (section_id>0),
+section_name char(30) constraint s_name not null,
+book_count number(6),
+constraint sect_prime primary key (section_id)
+);
+
+create table book_t
+(
+isbn number(10) constraint b_isbn check (isbn between 1 and 2000),
+title varchar(200) constraint b_title not null,
+author varchar(20) constraint b_author not null,
+lent_date date,
+return_date date,
+times_lent number(6),
+section_id number(3),
+constraint book_prime primary key(isbn),
+constraint book_sect foreign key (section_id) references section_t(section_id)
+on delete cascade
+);
+
+insert into section_t values(1,'ABC',78);
+insert into section_t values(2,'DEF',65);
+insert into book_t values(1,'java','james',to_date('3/3/09','mm/dd/yy'),to_date('4/3/09','mm/dd/yy'),6,1);
+select * from section_t;
+
+SECTION_ID SECTION_NAME                   BOOK_COUNT
+---------- ------------------------------ ----------
+         1 ABC                                    78
+         2 DEF                                    65
+
+SQL> select * from book_t;
+
+      ISBN
+----------
+TITLE
+--------------------------------------------------------------------------------
+AUTHOR               LENT_DATE RETURN_DA TIMES_LENT SECTION_ID
+-------------------- --------- --------- ---------- ----------
+         1
+java
+james                03-MAR-09 03-APR-09          6          1
+
+
+SUB QUERY
+
+create table stu_d
+(
+ roll number(20),
+ name varchar(20)
+);
+
+create table fees_d
+(
+ roll number(20),
+ amount number(10)
+);
+
+insert into stu_d values(12,'Ahmed');
+insert into stu_d values(13,'Isha');
+
+SQL> select name from stu_d where roll in ( select roll from fees_d where amount = 9000);
+
+NAME
+--------------------
+Isha
+
+select * from stu_d;
+
+      ROLL NAME
+---------- --------------------
+        12 Ahmed
+        13 Isha
+
+SQL> insert into fees_d values(13,9000);
+
+1 row created.
+
+SQL> select * from fees_d;
+
+      ROLL     AMOUNT
+---------- ----------
+        13       9000
+
+CORRELATED SUB QUERIES
+
+create table emp100
+(
+ deptno number,
+ salary number
+);
+
+insert into emp100 values(1,20);
+insert into emp100 values(1,30);
+insert into emp100 values(1,40);
+insert into emp100 values(2,200);
+insert into emp100 values(2,230);
+
+select * from emp100;
+
+    DEPTNO     SALARY
+---------- ----------
+         1         20
+         1         30
+         1         40
+         2        200
+         2        230
+delete from emp100 a where a.salary = (select max(salary) from emp100 b where a.deptno = b.deptno);
+
+2 rows deleted.
+
+SQL> select * from emp100;
+
+    DEPTNO     SALARY
+---------- ----------
+         1         20
+         1         30
+         2        200
+
+JOINS
+
+create table supplier1
+(
+ supplier_id varchar(20),
+supplier_name varchar(20)
+);
+
+create table order1
+(
+order_id varchar(20),
+supplier_id varchar(20),
+order_date date
+);
+
+insert into Supplier1 values('10000','IBM');
+insert into Supplier1 values('10001','Hewlett Packard');
+insert into Supplier1 values('10002','Microsoft');
+insert into Supplier1 values('10003','TCS');
+
+insert into Order1 values('1','10000',to_date('3/3/09','mm/dd/yy'));
+insert into Order1 values('2','10000',to_date('7/5/10','mm/dd/yy'));
+insert into Order1 values('3','10001',to_date('12/8/10','mm/dd/yy'));
+
+select * from suppliers;
+
+SUPPLIER_ID          SUPPLIER_NAME
+-------------------- --------------------
+10000                IBM
+10001                Hewlett Packard
+10002                Microsoft
+10003                TCS
+
+SQL> select * from orders;
+
+ORDER_ID             SUPPLIER_ID          ORDER_DAT
+-------------------- -------------------- ---------
+1                    10000                03-MAR-09
+2                    10000                05-JUL-10
+3                    10001                08-DEC-10
+
+select order_id, supplier_name from orders, suppliers where suppliers.supplier_id = orders.supplier_id;
+
+ORDER_ID             SUPPLIER_NAME
+-------------------- --------------------
+2                    IBM
+1                    IBM
+3                    Hewlett Packard
+
+select order_id, supplier_name from orders, suppliers where suppliers.supplier_id = orders.supplier_id(+);
+
+ORDER_ID             SUPPLIER_NAME
+-------------------- --------------------
+1                    IBM
+2                    IBM
+3                    Hewlett Packard
+                     Microsoft
+                     TCS
+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=++=
+
+JAVA
+
+all class names start with caps
+class files are shared with customers. NOT the java file
+one java file can have more than one main function. This gives the user different ways to enter the program.
+statements not allowed in classes except outside class gunvtions
+declarations and initialiations need to be donw in one line.
+implicit casting: different data types automatically casted to the variable type it is assigned to.
+explicit casting: double f = 4.6f;
+escape sequences: \n \t 
+
+short circuit: && (doesnt reach sceond half of condition if false)
+normal circuit: & (reaches second half of condtion even if false)
+when importing packages, you NEED TO SPECIFY CLASS NAME ALSO!!
+static variables: only one copy of such variables are shared among various objects of same class.
+Constructors: 
+local variables need to be initialized. only instance variables are initialized by default
+Constructor chaining: constructors can be called more than once by calling other constructors within the constructor the control is currently in.
+refractor and extractor can be used to create methods in a much faster manner.
+shortcuts
+ctrl+shft+r = open/search
+ctrl+shft+t = open/search for types
+ctrl+e = allows to select editor
+ctrl+f8 = switch perspectivr
+ctrl+up/down = toggle editors
+
+INHERITANCE
+
+check for has-a, is-a.
+method overriding: if child class has a function with the same name as the parent, the child function will be called. This is done so that a more specific form of the function is used.
+parent class can refer to child classes also. they can call functions only those that are common to parent and class.
+
+POLYMORPHISM
+Animal a = new Men();
+a.eat(); //men.eat
+a = new Dog();
+a.eat(); //dog.eat
+
+ABSTRACTION
+abstract functions in parents need to be overridden by chld class. For example, to ensure each specific child has its own start() and stop(), it is declared as abstract in parent class 
+
+INTERFACE
+abstract class
+no non static variables and they need to be initialized
+no constructors
+child class needs to be abstract OR it overrides all abstract parent classes.
+interface to interface keyword is extends only.
+
+POLYMORPHISM
+one interface many implementation
+
+Dynamic binding: super class can refer to sub class
